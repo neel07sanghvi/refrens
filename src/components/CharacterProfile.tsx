@@ -43,9 +43,11 @@ export default function CharacterProfile(props: CharacterProfileProps)
     };
 
     loadCharacter();
+
   }, [characterId]);
 
   if(loading) return <div>Loading...</div>;
+
   if(!character) return <div>Character not found</div>;
 
   return (
@@ -54,8 +56,8 @@ export default function CharacterProfile(props: CharacterProfileProps)
         position: "fixed",
         top: 0,
         left: 0,
-        right: 0,
-        bottom: 0,
+        width: "100vw",
+        height: "100vh",
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         display: "flex",
         justifyContent: "center",
@@ -69,53 +71,123 @@ export default function CharacterProfile(props: CharacterProfileProps)
           color: theme.text,
           padding: "2rem",
           borderRadius: "8px",
+          width: "90%",
           maxWidth: "600px",
-          maxHeight: "80vh",
+          maxHeight: "90vh",
           overflow: "auto",
-          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
         }}
       >
         <button
           onClick={onClose}
           style={{
-            float: "right",
+            position: "absolute",
+            top: "1rem",
+            right: "1rem",
             background: "none",
             border: "none",
             fontSize: "1.5rem",
             cursor: "pointer",
-            color: theme.text
+            color: theme.text,
+            zIndex: 10
           }}
         >
           ×
         </button>
-        <h2 style={{marginTop: 0}}>{character.name}</h2>
-        <img
-          src={character.image}
-          alt={character.name}
+
+        <div
           style={{
-            width: "200px",
-            height: "200px",
-            objectFit: "cover",
-            borderRadius: "8px"
-          }}
-        />
-        <p><strong>Status:</strong> {character.status}</p>
-        <p><strong>Species:</strong> {character.species}</p>
-        <p><strong>Gender:</strong> {character.gender}</p>
-        <p><strong>Origin:</strong> {character.origin.name}</p>
-        <p><strong>Location:</strong> {character.location.name}</p>
-        <h3>Episodes:</h3>
-        <ul
-          style={{
-            maxHeight: "150px",
-            overflowY: "auto",
-            padding: "0 1rem"
+            marginBottom: "1.5rem"
           }}
         >
-          {character.episode.map((ep) => (
-            <li key={ep}>{ep.split("/").pop()}</li>
-          ))}
-        </ul>
+          <img
+            src={character.image}
+            alt={character.name}
+            style={{
+              width: "150px",
+              height: "150px",
+              objectFit: "cover",
+              borderRadius: "50%",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)"
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            textAlign: "center",
+            marginBottom: "2rem"
+          }}
+        >
+          <h2 style={{margin: "0 0 1rem 0"}}>{character.name}</h2>
+          <p>
+            <strong>Status:</strong> {character.status}
+          </p>
+          <p>
+            <strong>Species:</strong> {character.species}
+          </p>
+          <p>
+            <strong>Gender:</strong> {character.gender}
+          </p>
+          <p>
+            <strong>Origin:</strong> {character.origin.name}
+          </p>
+          <p>
+            <strong>Location:</strong> {character.location.name}
+          </p>
+        </div>
+
+        <h3
+          style={{
+            textAlign: "center",
+            marginBottom: "1rem"
+          }}
+        >
+          Episodes
+        </h3>
+
+        <div
+          style={{
+            width: "100%",
+            maxHeight: "200px",
+            overflowY: "auto",
+            borderTop: `1px solid ${theme.text}`,
+            paddingTop: "1rem"
+          }}
+        >
+          <ul
+            style={{
+              listStyleType: "none",
+              padding: "4px",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
+              gap: "10px",
+              justifyItems: "center"
+            }}
+          >
+            {character.episode.map((ep) => (
+              <li
+                key={ep}
+                style={{
+                  minWidth: "50px",
+                  backgroundColor: theme.background,
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  boxShadow: `0 1px 2px ${isDarkMode ? themeColor.light.background : themeColor.dark.background}`,
+                  textAlign: "center"
+                }}
+              >
+                {ep.split("/").pop()}
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
     </div>
   );
