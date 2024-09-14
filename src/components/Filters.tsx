@@ -35,10 +35,16 @@ export default function Filters(props: FiltersProps)
         padding: "1rem",
         backgroundColor: theme.background,
         color: theme.text,
-        height: "100%"
+        height: "100%",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+        borderRight: `1px solid ${theme.border}`
       }}
     >
       <h3>Filters</h3>
+
       <input
         type="text"
         placeholder="Status"
@@ -46,6 +52,7 @@ export default function Filters(props: FiltersProps)
         onChange={(e) => onFilterChange({status: e.target.value})}
         style={inputStyle}
       />
+
       <input
         type="text"
         placeholder="Species"
@@ -53,6 +60,7 @@ export default function Filters(props: FiltersProps)
         onChange={(e) => onFilterChange({species: e.target.value})}
         style={inputStyle}
       />
+
       <input
         type="text"
         placeholder="Type"
@@ -60,6 +68,7 @@ export default function Filters(props: FiltersProps)
         onChange={(e) => onFilterChange({type: e.target.value})}
         style={inputStyle}
       />
+
       <input
         type="text"
         placeholder="Gender"

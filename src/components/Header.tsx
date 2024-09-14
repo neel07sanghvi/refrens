@@ -1,4 +1,5 @@
 import React from "react";
+import HamburgerMenu from "./HamburgerMenu";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
 
@@ -8,6 +9,9 @@ interface HeaderProps
   searchValue: string;
   onThemeToggle: () => void;
   isDarkMode: boolean;
+  isMenuOpen: boolean;
+  isMobile: boolean;
+  toggleMenu: () => void;
 }
 
 export function Header(props: HeaderProps)
@@ -16,7 +20,10 @@ export function Header(props: HeaderProps)
     onSearch,
     searchValue,
     onThemeToggle,
-    isDarkMode
+    isDarkMode,
+    isMenuOpen,
+    isMobile,
+    toggleMenu
   } = props;
 
   return (
@@ -27,18 +34,38 @@ export function Header(props: HeaderProps)
         alignItems: "center",
         padding: "1rem",
         backgroundColor: isDarkMode ? "#333" : "#f0f0f0",
-        color: isDarkMode ? "#fff" : "#000"
+        color: isDarkMode ? "#fff" : "#000",
+        position: "relative"
       }}
     >
-      <h1>Rick and Morty Characters</h1>
+      {isMobile && (
+        <HamburgerMenu
+          isOpen={isMenuOpen}
+          onToggle={toggleMenu}
+          isDarkMode={isDarkMode}
+        />
+      )}
+
+      {!isMobile && <h1>Rick and Morty Characters</h1>}
+
       <div
         style={{
           display: "flex",
-          alignItems: "center"
+          alignItems: "center",
+          flexGrow: 1,
+          justifyContent: "space-between",
+          paddingLeft: "2rem"
         }}
       >
-        <SearchBar value={searchValue} onChange={onSearch} />
-        <ThemeToggle onToggle={onThemeToggle} isDarkMode={isDarkMode} />
+        <SearchBar
+          value={searchValue}
+          onChange={onSearch}
+          isDarkMode={isDarkMode}
+        />
+        <ThemeToggle
+          onToggle={onThemeToggle}
+          isDarkMode={isDarkMode}
+        />
       </div>
     </header>
   );

@@ -4,7 +4,6 @@ import "./App.css";
 import CharacterGrid from "./components/CharacterGrid";
 import CharacterProfile from "./components/CharacterProfile";
 import Filters from "./components/Filters";
-import HamburgerMenu from "./components/HamburgerMenu";
 import {Header} from "./components/Header";
 import Pagination from "./components/Pagination";
 import {useCharacters} from "./hooks/useCharacters";
@@ -23,9 +22,7 @@ export default function App()
   const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {width} = useWindowSize();
-
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
 
   const toggleTheme = () =>
   {
@@ -78,6 +75,9 @@ export default function App()
         searchValue={state.filters.name}
         onThemeToggle={toggleTheme}
         isDarkMode={isDarkMode}
+        isMenuOpen={isMenuOpen}
+        toggleMenu={toggleMenu}
+        isMobile={isMobile}
       />
       <div
         style={{
@@ -85,9 +85,6 @@ export default function App()
           position: "relative"
         }}
       >
-        {isMobile && (
-          <HamburgerMenu isOpen={isMenuOpen} onToggle={toggleMenu} isDarkMode={isDarkMode} />
-        )}
         {isMobile && isMenuOpen && (
           <div
             style={{
@@ -102,6 +99,7 @@ export default function App()
             onClick={toggleMenu}
           />
         )}
+
         <div
           style={{
             width: isMobile ? "80%" : "250px",
@@ -123,6 +121,7 @@ export default function App()
             isDarkMode={isDarkMode}
           />
         </div>
+
         <div
           style={{
             flex: 1,
@@ -149,6 +148,7 @@ export default function App()
             </>
           )}
         </div>
+
         {selectedCharacterId && (
           <CharacterProfile
             characterId={selectedCharacterId}
