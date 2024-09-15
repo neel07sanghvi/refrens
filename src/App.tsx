@@ -135,25 +135,49 @@ export default function App()
             padding: "1rem"
           }}
         >
-          {state.loading ? (
-            <div>Loading...</div>
-          ) : state.error ? (
-            <div>Error: {state.error}</div>
-          ) : (
-            <>
-              <CharacterGrid
-                characters={state.characters[state.currentPage] || []}
-                onCharacterClick={handleCharacterClick}
-                isDarkMode={isDarkMode}
-              />
-              <Pagination
-                currentPage={state.currentPage}
-                totalPages={state.totalPages}
-                onPageChange={handlePageChange}
-                isDarkMode={isDarkMode}
-              />
-            </>
-          )}
+          {state.loading
+            ? (
+              <div
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                Loading...
+              </div>
+            )
+            : state.error
+              ? (
+                <div
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  Error: {state.error}
+                </div>
+              )
+              : (
+                <>
+                  <CharacterGrid
+                    characters={state.characters[state.currentPage] || []}
+                    onCharacterClick={handleCharacterClick}
+                    isDarkMode={isDarkMode}
+                  />
+                  <Pagination
+                    currentPage={state.currentPage}
+                    totalPages={state.totalPages}
+                    onPageChange={handlePageChange}
+                    isDarkMode={isDarkMode}
+                  />
+                </>
+              )}
         </div>
 
         {selectedCharacterId && (
