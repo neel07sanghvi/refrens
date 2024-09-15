@@ -9,6 +9,7 @@ import {Header} from "./components/Header";
 import Pagination from "./components/Pagination";
 import {useCharacters} from "./hooks/useCharacters";
 import {useWindowSize} from "./hooks/useWindowSize";
+import {ICharactersState} from "./types/indexPlus";
 import {themeColor} from "./utils/constants";
 
 export default function App()
@@ -43,7 +44,7 @@ export default function App()
 
   }, [setFilters]);
 
-  const handleFilterChange = useCallback((newFilters: Partial<typeof state.filters>) =>
+  const handleFilterChange = useCallback((newFilters: Partial<ICharactersState["filters"]>) =>
   {
     setFilters(newFilters);
 
