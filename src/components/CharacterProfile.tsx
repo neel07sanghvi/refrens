@@ -107,9 +107,33 @@ export default function CharacterProfile(props: ICharacterProfileProps)
           flexDirection: "column"
         }}
       >
-        {loading && <p> Loading... </p>}
+        {loading &&
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            Loading...
+          </div>
+        }
 
-        {!character && <p> Character not found </p>}
+        {(!loading && !character) &&
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            Character not found
+          </div>
+        }
 
         {(!loading && character) && (
           <>

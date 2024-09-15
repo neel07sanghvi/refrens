@@ -6,14 +6,14 @@ import {TypeStatus} from "../types/indexPlus";
 import {ICharactersState} from "../types/indexPlus";
 import {themeColor} from "../utils/constants";
 
-interface FiltersProps
+interface IFiltersProps
 {
   filters: ICharactersState["filters"];
   onFilterChange: (filters: Partial<ICharactersState["filters"]>) => void;
   isDarkMode: boolean;
 }
 
-export default function Filters(props: FiltersProps)
+export default function Filters(props: IFiltersProps)
 {
   const {
     filters,

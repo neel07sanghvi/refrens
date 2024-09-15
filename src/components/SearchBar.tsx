@@ -2,14 +2,14 @@ import React from "react";
 import {useDebounce} from "../hooks/useDebounce";
 import {themeColor} from "../utils/constants";
 
-interface SearchBarProps
+interface ISearchBarProps
 {
   value: string;
   onChange: (value: string) => void;
   isDarkMode: boolean;
 }
 
-export default function SearchBar(props: SearchBarProps)
+export default function SearchBar(props: ISearchBarProps)
 {
   const {
     value,

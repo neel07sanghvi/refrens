@@ -31,11 +31,13 @@ export default function CharacterGrid(props: CharacterGridProps)
       }}
     >
       {characters.map((character) => (
-        <CharacterCard
-          character={character}
-          onClick={onCharacterClick}
-          isDarkMode={isDarkMode}
-        />
+        <div key={character.id}>
+          <CharacterCard
+            character={character}
+            onClick={onCharacterClick}
+            isDarkMode={isDarkMode}
+          />
+        </div>
       ))}
     </div>
   );

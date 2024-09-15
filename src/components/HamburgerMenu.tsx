@@ -1,6 +1,6 @@
 import React from "react";
 
-interface HamburgerMenuProps
+interface IHamburgerMenuProps
 {
   isOpen: boolean;
   onToggle: () => void;
@@ -11,7 +11,7 @@ export default function HamburgerMenu({
   isOpen,
   onToggle,
   isDarkMode
-}: HamburgerMenuProps)
+}: IHamburgerMenuProps)
 {
   const iconColor = isDarkMode ? "#fff" : "#000";
 

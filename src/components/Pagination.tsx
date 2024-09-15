@@ -1,7 +1,7 @@
 import React from "react";
 import {themeColor} from "../utils/constants";
 
-interface PaginationProps
+interface IPaginationProps
 {
   currentPage: number;
   totalPages: number;
@@ -9,7 +9,7 @@ interface PaginationProps
   isDarkMode: boolean;
 }
 
-export default function Pagination(props: PaginationProps)
+export default function Pagination(props: IPaginationProps)
 {
   const {
     currentPage,

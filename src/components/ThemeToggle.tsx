@@ -1,12 +1,12 @@
 import React from "react";
 
-interface ThemeToggleProps
+interface IThemeToggleProps
 {
   onToggle: () => void;
   isDarkMode: boolean;
 }
 
-export default function ThemeToggle(props: ThemeToggleProps)
+export default function ThemeToggle(props: IThemeToggleProps)
 {
   const {
     isDarkMode,

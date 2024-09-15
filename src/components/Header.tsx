@@ -3,7 +3,7 @@ import HamburgerMenu from "./HamburgerMenu";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
 
-interface HeaderProps
+interface IHeaderProps
 {
   onSearch: (value: string) => void;
   searchValue: string;
@@ -14,7 +14,7 @@ interface HeaderProps
   toggleMenu: () => void;
 }
 
-export function Header(props: HeaderProps)
+export function Header(props: IHeaderProps)
 {
   const {
     onSearch,

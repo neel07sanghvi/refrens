@@ -3,14 +3,14 @@ import React from "react";
 import {ICharacter} from "../types/indexPlus";
 import {themeColor} from "../utils/constants";
 
-interface CharacterCardProps
+interface ICharacterCardProps
 {
   character: ICharacter;
   onClick: (id: number) => void;
   isDarkMode: boolean;
 }
 
-export default function CharacterCard(props: CharacterCardProps)
+export default function CharacterCard(props: ICharacterCardProps)
 {
   const {
     character,

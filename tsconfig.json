@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "lib": [
-      "ES6", "dom", "dom.iterable", "esnext"
-    ],
+    "lib": ["ES6", "dom", "dom.iterable", "esnext"],
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
