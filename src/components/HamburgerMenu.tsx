@@ -7,13 +7,13 @@ interface HamburgerMenuProps
   isDarkMode: boolean;
 }
 
-export default function HamburgerMenu(props: HamburgerMenuProps)
+export default function HamburgerMenu({
+  isOpen,
+  onToggle,
+  isDarkMode
+}: HamburgerMenuProps)
 {
-  const {
-    isDarkMode,
-    isOpen,
-    onToggle
-  } = props;
+  const iconColor = isDarkMode ? "#fff" : "#000";
 
   return (
     <button
@@ -27,47 +27,67 @@ export default function HamburgerMenu(props: HamburgerMenuProps)
         left: 0,
         right: 0,
         zIndex: 1000,
-        ...isOpen && {
+        ...(isOpen && {
           position: "absolute",
           width: "80%"
-        }
+        })
       }}
     >
-      <div
-        style={{
-          width: "25px",
-          height: "3px",
-          backgroundColor: isDarkMode ? "#fff" : "#000",
-          transition: "0.4s",
-          transform: isOpen ? "rotate(-45deg) translate(-7px, 7px)" : "none",
-          ...isOpen && {
-            float: "right"
-          }
-        }}
-      />
-      <div
-        style={{
-          width: "25px",
-          height: "3px",
-          backgroundColor: isDarkMode ? "#fff" : "#000",
-          margin: "5px 0",
-          transition: "0.4s",
-          opacity: isOpen ? 0 : 1
-        }}
-      />
-      <div
-        style={{
-          width: "25px",
-          height: "3px",
-          backgroundColor: isDarkMode ? "#fff" : "#000",
-          margin: "5px 0",
-          transition: "0.4s",
-          transform: isOpen ? "rotate(45deg) translate(-5px, -5px)" : "none",
-          ...isOpen && {
-            float: "right"
-          }
-        }}
-      />
+      {isOpen ? (
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{float: "right"}}
+        >
+          <path
+            d="M18.75 6.25L6.25 18.75"
+            stroke={iconColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M6.25 6.25L18.75 18.75"
+            stroke={iconColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      ) : (
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 25 25"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.125 6.25H21.875"
+            stroke={iconColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M3.125 12.5H21.875"
+            stroke={iconColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M3.125 18.75H21.875"
+            stroke={iconColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
     </button>
   );
 }

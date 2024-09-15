@@ -3,27 +3,21 @@ import {useCallback} from "react";
 import {ReducerState} from "react";
 import {useReducer} from "react";
 import {fetchCharacters} from "../services/api";
-import {CharactersAction} from "../types/indexPlus";
-import {CharactersState} from "../types/indexPlus";
+import {TypeCharactersAction} from "../types/indexPlus";
+import {ICharactersState} from "../types/indexPlus";
 import {random} from "../utils/constants";
 
-const initialState: CharactersState = {
+const initialState: ICharactersState = {
   characters: {},
   currentPage: 1,
   totalPages: 1,
   loading: false,
   error: null,
-  filters: {
-    name: "",
-    status: "",
-    species: "",
-    type: "",
-    gender: ""
-  },
+  filters: {},
   version: random()
 };
 
-const fnCharactersReducer = (state: CharactersState, action: CharactersAction): CharactersState =>
+const fnCharactersReducer = (state: ICharactersState, action: TypeCharactersAction): ICharactersState =>
 {
   switch(action.type)
   {
@@ -100,7 +94,7 @@ export const useCharacters = () =>
     }
   }, [state.currentPage, state.filters]);
 
-  const setFilters = useCallback((filters: Partial<CharactersState["filters"]>) =>
+  const setFilters = useCallback((filters: Partial<ICharactersState["filters"]>) =>
   {
     dispatch({
       type: "SET_FILTERS",

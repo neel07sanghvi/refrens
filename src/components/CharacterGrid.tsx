@@ -1,11 +1,11 @@
 import React from "react";
-import {Character} from "../types/indexPlus";
+import {ICharacter} from "../types/indexPlus";
 import {themeColor} from "../utils/constants";
 import CharacterCard from "./CharacterCard";
 
 interface CharacterGridProps
 {
-  characters: Character[];
+  characters: ICharacter[];
   onCharacterClick: (id: number) => void;
   isDarkMode: boolean;
 }

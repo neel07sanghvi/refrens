@@ -72,7 +72,7 @@ export default function App()
     >
       <Header
         onSearch={handleSearch}
-        searchValue={state.filters.name}
+        searchValue={state.filters.name ?? ""}
         onThemeToggle={toggleTheme}
         isDarkMode={isDarkMode}
         isMenuOpen={isMenuOpen}

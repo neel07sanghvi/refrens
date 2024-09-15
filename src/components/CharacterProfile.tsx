@@ -1,54 +1,80 @@
 import React, {useEffect, useState} from "react";
-import {fetchCharacterById} from "../services/api";
-import {Character} from "../types/indexPlus";
+import {fetchCharacterById, fetchEpisodeByUrl, fetchLocationById} from "../services/api";
+import {ICharacter, IEpisode, ILocation} from "../types/indexPlus";
 import {themeColor} from "../utils/constants";
 
-interface CharacterProfileProps
+interface ICharacterProfileProps
 {
   characterId: number;
   onClose: () => void;
   isDarkMode: boolean;
 }
 
-export default function CharacterProfile(props: CharacterProfileProps)
+export default function CharacterProfile(props: ICharacterProfileProps)
 {
   const {
     characterId,
     onClose,
     isDarkMode
   } = props;
-
   const theme = isDarkMode ? themeColor.dark : themeColor.light;
 
-  const [character, setCharacter] = useState<Character | null>(null);
+  const [character, setCharacter] = useState<ICharacter>();
+  const [origin, setOrigin] = useState<ILocation>();
+  const [location, setLocation] = useState<ILocation>();
+  const [episodes, setEpisodes] = useState<IEpisode[]>([]); // Store fetched episodes
   const [loading, setLoading] = useState(true);
+  const [loadingEpisodes, setLoadingEpisodes] = useState(true); // Loading state for episodes
 
   useEffect(() =>
   {
-    const loadCharacter = async() =>
+    const loadCharacterAndLocations = async() =>
     {
       try
       {
-        const data = await fetchCharacterById(characterId);
-        setCharacter(data);
+        const characterData = await fetchCharacterById(characterId);
+        setCharacter(characterData);
+
+        if(characterData.origin.url)
+        {
+          const originId = extractIdFromUrl(characterData.origin.url);
+          const originData = await fetchLocationById(originId);
+          setOrigin(originData);
+        }
+
+        if(characterData.location.url)
+        {
+          const locationId = extractIdFromUrl(characterData.location.url);
+          const locationData = await fetchLocationById(locationId);
+          setLocation(locationData);
+        }
+
+        // Fetch episode details
+        const episodePromises = characterData.episode.map((epUrl) =>
+          fetchEpisodeByUrl(epUrl)
+        );
+        const fetchedEpisodes = await Promise.all(episodePromises);
+        setEpisodes(fetchedEpisodes);
       }
       catch(error)
       {
-        console.error("Failed to fetch character:", error);
+        console.error("Failed to fetch character, location, or episode data:", error);
       }
       finally
       {
         setLoading(false);
+        setLoadingEpisodes(false); // Episodes fetched
       }
     };
 
-    loadCharacter();
-
+    loadCharacterAndLocations();
   }, [characterId]);
 
-  if(loading) return <div>Loading...</div>;
-
-  if(!character) return <div>Character not found</div>;
+  const extractIdFromUrl = (url: string) =>
+  {
+    const parts = url.split("/");
+    return parseInt(parts[parts.length - 1]);
+  };
 
   return (
     <div
@@ -69,126 +95,208 @@ export default function CharacterProfile(props: CharacterProfileProps)
         style={{
           backgroundColor: theme.background,
           color: theme.text,
-          padding: "2rem",
+          padding: "1rem",
           borderRadius: "8px",
           width: "90%",
-          maxWidth: "600px",
-          maxHeight: "90vh",
-          overflow: "auto",
+          maxWidth: "800px",
+          height: "90vh",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           position: "relative",
+          overflow: "hidden",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
+          flexDirection: "column"
         }}
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "1rem",
-            right: "1rem",
-            background: "none",
-            border: "none",
-            fontSize: "1.5rem",
-            cursor: "pointer",
-            color: theme.text,
-            zIndex: 10
-          }}
-        >
-          ×
-        </button>
+        {loading && <p> Loading... </p>}
 
-        <div
-          style={{
-            marginBottom: "1.5rem"
-          }}
-        >
-          <img
-            src={character.image}
-            alt={character.name}
-            style={{
-              width: "150px",
-              height: "150px",
-              objectFit: "cover",
-              borderRadius: "50%",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)"
-            }}
-          />
-        </div>
+        {!character && <p> Character not found </p>}
 
-        <div
-          style={{
-            width: "100%",
-            textAlign: "center",
-            marginBottom: "2rem"
-          }}
-        >
-          <h2 style={{margin: "0 0 1rem 0"}}>{character.name}</h2>
-          <p>
-            <strong>Status:</strong> {character.status}
-          </p>
-          <p>
-            <strong>Species:</strong> {character.species}
-          </p>
-          <p>
-            <strong>Gender:</strong> {character.gender}
-          </p>
-          <p>
-            <strong>Origin:</strong> {character.origin.name}
-          </p>
-          <p>
-            <strong>Location:</strong> {character.location.name}
-          </p>
-        </div>
+        {(!loading && character) && (
+          <>
+            <button
+              onClick={onClose}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+                background: "none",
+                border: "none",
+                fontSize: "1.5rem",
+                cursor: "pointer",
+                color: theme.text,
+                zIndex: 10
+              }}
+            >
+              ×
+            </button>
 
-        <h3
-          style={{
-            textAlign: "center",
-            marginBottom: "1rem"
-          }}
-        >
-          Episodes
-        </h3>
-
-        <div
-          style={{
-            width: "100%",
-            maxHeight: "200px",
-            overflowY: "auto",
-            borderTop: `1px solid ${theme.text}`,
-            paddingTop: "1rem"
-          }}
-        >
-          <ul
-            style={{
-              listStyleType: "none",
-              padding: "4px",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))",
-              gap: "10px",
-              justifyItems: "center"
-            }}
-          >
-            {character.episode.map((ep) => (
-              <li
-                key={ep}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                overflowY: "auto"
+              }}
+            >
+              <div
                 style={{
-                  minWidth: "50px",
-                  backgroundColor: theme.background,
-                  padding: "0.5rem 1rem",
-                  borderRadius: "4px",
-                  boxShadow: `0 1px 2px ${isDarkMode ? themeColor.light.background : themeColor.dark.background}`,
-                  textAlign: "center"
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginBottom: "1rem"
                 }}
               >
-                {ep.split("/").pop()}
-              </li>
-            ))}
-          </ul>
-        </div>
+                <img
+                  src={character.image}
+                  alt={character.name}
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                    marginBottom: "1rem"
+                  }}
+                />
+                <h2
+                  style={{
+                    margin: "0 0 1rem 0",
+                    fontSize: "2rem",
+                    textAlign: "center"
+                  }}
+                >
+                  {character.name}
+                </h2>
+              </div>
 
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1rem",
+                  marginBottom: "1rem"
+                }}
+              >
+                <LocationInfo title="Origin" location={origin} />
+                <LocationInfo title="Current Location" location={location} />
+              </div>
+
+              <div
+                style={{
+                  marginTop: "1rem",
+                  paddingBottom: "1rem",
+                  flex: 1
+                }}
+              >
+                <h3
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "1rem"
+                  }}
+                >
+                  Episodes
+                </h3>
+                <div
+                  style={{
+                    maxHeight: "150px",
+                    overflowY: "auto",
+                    borderTop: `1px solid ${theme.text}`,
+                    paddingTop: "1rem",
+                    paddingBottom: "0.5rem"
+                  }}
+                >
+                  {loadingEpisodes ? (
+                    <p>Loading episodes...</p>
+                  ) : (
+                    <ul
+                      style={{
+                        listStyleType: "none",
+                        padding: "4px",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
+                        gap: "10px",
+                        justifyItems: "center"
+                      }}
+                    >
+                      {episodes.map((ep) => (
+                        <li
+                          key={ep.id}
+                          style={{
+                            backgroundColor: theme.cardBackground,
+                            padding: "0.5rem",
+                            borderRadius: "4px",
+                            boxShadow: `0 1px 2px ${
+                              isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+                            }`,
+                            textAlign: "center",
+                            width: "100%",
+                            wordWrap: "break-word", // Ensures long text breaks into the next line
+                            overflow: "hidden", // Prevents overflow
+                            whiteSpace: "normal", // Allow text to wrap normally
+                            display: "flex", // Ensures flexibility in box size
+                            justifyContent: "center", // Aligns text at the center
+                            alignItems: "center" // Ensures vertical centering
+                          }}
+                        >
+                          {ep.name} ({ep.episode})
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
+    </div>
+  );
+}
+
+function LocationInfo(props: {title: string; location?: ILocation})
+{
+  const {
+    title,
+    location
+  } = props;
+
+  return (
+    <div
+      style={{
+        backgroundColor: "rgba(0,0,0,0.05)",
+        padding: "1rem",
+        borderRadius: "8px"
+      }}
+    >
+      <h3
+        style={{
+          marginTop: 0,
+          marginBottom: "0.5rem"
+        }}
+      >{title}</h3>
+      {location ? (
+        <div
+          style={{
+            display: "grid",
+            gap: "0.5rem"
+          }}
+        >
+          <p>
+            <strong>Name:</strong> {location.name}
+          </p>
+          <p>
+            <strong>Type:</strong> {location.type}
+          </p>
+          <p>
+            <strong>Dimension:</strong> {location.dimension}
+          </p>
+          <p>
+            <strong>Residents:</strong> {location.residents.length}
+          </p>
+        </div>
+      ) : (
+        <p>Unknown</p>
+      )}
     </div>
   );
 }

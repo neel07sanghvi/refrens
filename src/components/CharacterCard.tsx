@@ -1,11 +1,11 @@
 import {useState} from "react";
 import React from "react";
-import {Character} from "../types/indexPlus";
+import {ICharacter} from "../types/indexPlus";
 import {themeColor} from "../utils/constants";
 
 interface CharacterCardProps
 {
-  character: Character;
+  character: ICharacter;
   onClick: (id: number) => void;
   isDarkMode: boolean;
 }
