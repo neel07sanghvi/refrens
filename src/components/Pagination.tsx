@@ -1,4 +1,6 @@
-import React from "react";
+import {CSSProperties} from "react";
+import React, {ReactNode} from "react";
+import {useWindowSize} from "../hooks/useWindowSize";
 import {themeColor} from "../utils/constants";
 
 interface IPaginationProps
@@ -19,19 +21,71 @@ export default function Pagination(props: IPaginationProps)
   } = props;
 
   const theme = isDarkMode ? themeColor.dark : themeColor.light;
+  const {isMobile} = useWindowSize();
 
-  const buttonStyle = {
-    padding: "0.5rem 1rem",
-    margin: "0 0.25rem",
-    backgroundColor: theme.button,
-    color: theme.buttonText,
+  const buttonStyle: CSSProperties = {
+    padding: isMobile ? "0.3rem 0.6rem" : "0.5rem 1rem",
+    margin: isMobile ? "0.1rem" : "0 0.25rem",
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
-    ":disabled": {
-      opacity: 0.5,
-      cursor: "not-allowed"
+    fontSize: isMobile ? "0.8rem" : "1rem"
+  };
+
+  const activeButtonStyle: CSSProperties = {
+    ...buttonStyle,
+    border: `2px solid ${theme.buttonActiveBorder}`
+  };
+
+  const disabledButtonStyle: CSSProperties = {
+    ...buttonStyle,
+    cursor: "not-allowed"
+  };
+
+  const getPageNumbers = (): (ReactNode | number)[] =>
+  {
+    const pageNumbers = [] as (ReactNode | number)[];
+    const ellipsis: ReactNode = (
+      <span
+        key="ellipsis"
+        style={{
+          margin: "0 0.5rem",
+          display: "flex",
+          alignItems: "center"
+        }}
+      >
+        ...
+      </span>
+    );
+
+    if(totalPages <= (isMobile ? 5 : 7))
+    {
+      for(let i = 1; i <= totalPages; i++)
+      {
+        pageNumbers.push(i);
+      }
     }
+    else
+    {
+      pageNumbers.push(1);
+      if(currentPage > (isMobile ? 2 : 3))
+      {
+        pageNumbers.push(ellipsis);
+      }
+      const start = Math.max(2, currentPage - (isMobile ? 0 : 1));
+      const end = Math.min(totalPages - 1, currentPage + (isMobile ? 0 : 1));
+      for(let i = start; i <= end; i++)
+      {
+        pageNumbers.push(i);
+      }
+      if(currentPage < totalPages - (isMobile ? 1 : 2))
+      {
+        pageNumbers.push(ellipsis);
+      }
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
   };
 
   return (
@@ -40,33 +94,52 @@ export default function Pagination(props: IPaginationProps)
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "1rem",
+        padding: isMobile ? "0.5rem" : "1rem",
         backgroundColor: theme.background,
-        color: theme.text
+        color: theme.text,
+        flexWrap: "wrap"
       }}
     >
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        style={buttonStyle}
+      <div
+        style={{
+          border: `1px solid ${theme.cardBackground}`,
+          borderRadius: "4px",
+          padding: "4px",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-evenly"
+        }}
       >
-        Previous
-      </button>
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          style={currentPage === 1 ? disabledButtonStyle : buttonStyle}
+        >
+          {"< Prev"}
+        </button>
 
-      <span
-        style={{margin: "0 1rem"}}
-      >
-        {currentPage} / {totalPages}
-      </span>
+        {getPageNumbers().map((pageNum, index) => (
+          typeof pageNum === "number"
+            ? (
+              <button
+                key={index}
+                onClick={() => onPageChange(pageNum as number)}
+                style={pageNum === currentPage ? activeButtonStyle : buttonStyle}
+              >
+                {pageNum}
+              </button>
+            )
+            : pageNum
+        ))}
 
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        style={buttonStyle}
-      >
-        Next
-      </button>
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          style={currentPage === totalPages ? disabledButtonStyle : buttonStyle}
+        >
+          {"Next >"}
+        </button>
+      </div>
     </div>
   );
 }
-

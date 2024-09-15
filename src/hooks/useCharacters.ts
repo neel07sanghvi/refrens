@@ -1,6 +1,4 @@
-import {Reducer} from "react";
 import {useCallback} from "react";
-import {ReducerState} from "react";
 import {useReducer} from "react";
 import {fetchCharacters} from "../services/api";
 import {TypeCharactersAction} from "../types/indexPlus";
@@ -63,7 +61,7 @@ const fnCharactersReducer = (state: ICharactersState, action: TypeCharactersActi
 
 export const useCharacters = () =>
 {
-  const [state, dispatch] = useReducer(fnCharactersReducer, initialState as ReducerState<Reducer<any, any>>);
+  const [state, dispatch] = useReducer(fnCharactersReducer, initialState);
 
   const loadCharacters = useCallback(async() =>
   {
@@ -87,6 +85,7 @@ export const useCharacters = () =>
     }
     catch(error)
     {
+      console.error("Failed to fetch character data:", error);
       dispatch({
         type: "FETCH_CHARACTERS_FAILURE",
         payload: "Failed to fetch characters"
