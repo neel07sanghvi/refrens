@@ -41,19 +41,19 @@ export default function App()
   {
     setFilters({name: value});
 
-  }, []);
+  }, [setFilters]);
 
   const handleFilterChange = useCallback((newFilters: Partial<typeof state.filters>) =>
   {
     setFilters(newFilters);
 
-  }, []);
+  }, [setFilters]);
 
   const handlePageChange = useCallback((page: number) =>
   {
     setPage(page);
 
-  }, []);
+  }, [setPage]);
 
   const handleCharacterClick = useCallback((id: number) =>
   {
