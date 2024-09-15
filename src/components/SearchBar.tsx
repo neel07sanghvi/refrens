@@ -1,4 +1,5 @@
 import React from "react";
+import {useDebounce} from "../hooks/useDebounce";
 import {themeColor} from "../utils/constants";
 
 interface SearchBarProps
@@ -18,6 +19,14 @@ export default function SearchBar(props: SearchBarProps)
 
   const theme = isDarkMode ? themeColor.dark : themeColor.light;
 
+  const {
+    debouncedValue,
+    setDebouncedValue
+  } = useDebounce(
+    value,
+    onChange
+  );
+
   return (
     <div
       style={{
@@ -28,8 +37,8 @@ export default function SearchBar(props: SearchBarProps)
       <input
         type="text"
         placeholder="Search characters"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={debouncedValue}
+        onChange={(e) => setDebouncedValue(e.target.value)}
         style={{
           width: "100%",
           padding: "10px 40px 10px 15px",

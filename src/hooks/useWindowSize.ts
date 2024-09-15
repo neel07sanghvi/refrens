@@ -13,7 +13,7 @@ export const useWindowSize = () =>
     width: window.innerWidth,
     height: window.innerHeight
   });
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(true);
 
   useEffect(() =>
   {

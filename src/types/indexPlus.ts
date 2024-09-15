@@ -31,6 +31,12 @@ export type TypeGender =
   | "genderless"
   | "unknown"
 
+export type TypeSpecies =
+  | "human"
+  | "alien"
+  | "humanoid"
+  | "unknown"
+
 export interface ICharactersState
 {
   characters: Record<number, ICharacter[]>;
@@ -41,7 +47,7 @@ export interface ICharactersState
   filters: {
     name?: string;
     status?: TypeStatus;
-    species?: string;
+    species?: TypeSpecies;
     type?: string;
     gender?: TypeGender;
   };

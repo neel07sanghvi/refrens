@@ -1,4 +1,5 @@
 // const CharactersPage = lazy(() => import("./components/CharactersPage"));
+import {useCallback} from "react";
 import React, {useEffect, useState} from "react";
 import "./App.css";
 import CharacterGrid from "./components/CharacterGrid";
@@ -24,35 +25,41 @@ export default function App()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {isMobile} = useWindowSize();
 
-  const toggleTheme = () =>
+  const toggleTheme = useCallback(() =>
   {
     setIsDarkMode(!isDarkMode);
-  };
 
-  const toggleMenu = () =>
+  }, [isDarkMode]);
+
+  const toggleMenu = useCallback(() =>
   {
     setIsMenuOpen(!isMenuOpen);
-  };
 
-  const handleSearch = (value: string) =>
+  }, [isMenuOpen]);
+
+  const handleSearch = useCallback((value: string) =>
   {
     setFilters({name: value});
-  };
 
-  const handleFilterChange = (newFilters: Partial<typeof state.filters>) =>
+  }, []);
+
+  const handleFilterChange = useCallback((newFilters: Partial<typeof state.filters>) =>
   {
     setFilters(newFilters);
-  };
 
-  const handlePageChange = (page: number) =>
+  }, []);
+
+  const handlePageChange = useCallback((page: number) =>
   {
     setPage(page);
-  };
 
-  const handleCharacterClick = (id: number) =>
+  }, []);
+
+  const handleCharacterClick = useCallback((id: number) =>
   {
     setSelectedCharacterId(id);
-  };
+
+  }, []);
 
   useEffect(() =>
   {

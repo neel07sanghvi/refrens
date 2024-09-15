@@ -1,5 +1,6 @@
-import {CSSProperties} from "react";
 import React from "react";
+import {useDebounce} from "../hooks/useDebounce";
+import {TypeSpecies} from "../types/indexPlus";
 import {TypeGender} from "../types/indexPlus";
 import {TypeStatus} from "../types/indexPlus";
 import {ICharactersState} from "../types/indexPlus";
@@ -22,15 +23,15 @@ export default function Filters(props: FiltersProps)
 
   const theme = isDarkMode ? themeColor.dark : themeColor.light;
 
-  const inputStyle = {
-    width: "100%",
-    padding: "0.5rem",
-    marginBottom: "0.5rem",
-    backgroundColor: theme.cardBackground,
-    color: theme.text,
-    border: `1px solid ${theme.border}`,
-    borderRadius: "4px"
-  };
+  const {
+    debouncedValue,
+    setDebouncedValue
+  } = useDebounce(
+    filters.type,
+    (val) => onFilterChange({
+      type: val
+    })
+  );
 
   return (
     <div
@@ -64,52 +65,31 @@ export default function Filters(props: FiltersProps)
         label={"Gender"}
       />
 
-      <input
-        type="text"
-        placeholder="Species"
+      <DropDown
         value={filters.species}
-        onChange={(e) => onFilterChange({species: e.target.value})}
-        style={inputStyle}
+        onChange={(value) => onFilterChange({species: value as TypeSpecies})}
+        optionArr={["human", "alien", "humanoid", "unknown"] as TypeSpecies[]}
+        isDarkMode={isDarkMode}
+        label={"Species"}
       />
 
       <input
         type="text"
         placeholder="Type"
-        value={filters.type}
-        onChange={(e) => onFilterChange({type: e.target.value})}
-        style={inputStyle}
+        value={debouncedValue}
+        onChange={(e) => setDebouncedValue(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "0.5rem",
+          marginBottom: "0.5rem",
+          backgroundColor: theme.cardBackground,
+          color: theme.text,
+          border: `1px solid ${theme.border}`,
+          borderRadius: "4px"
+        }}
       />
 
     </div>
-  );
-}
-
-function DropDown2(props: {
-  value?: string,
-  onChange: (value?: string) => void,
-  optionArr: string[],
-})
-{
-  const {
-    value,
-    onChange,
-    optionArr
-  } = props;
-
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {optionArr.map((option) => (
-        <option
-          key={option}
-          value={option}
-        >
-          {option}
-        </option>
-      ))}
-    </select>
   );
 }
 
@@ -131,30 +111,6 @@ function DropDown(props: {
 
   const theme = isDarkMode ? themeColor.dark : themeColor.light;
 
-  const selectStyle = {
-    width: "100%",
-    padding: "0.5rem",
-    marginBottom: "0.5rem",
-    backgroundColor: theme.cardBackground,
-    color: theme.text,
-    border: `1px solid ${theme.border}`,
-    borderRadius: "4px",
-    appearance: "none",
-    WebkitAppearance: "none",
-    MozAppearance: "none"
-  } as CSSProperties;
-
-  const arrowStyle = {
-    position: "absolute",
-    right: "10px",
-    top: "40%",
-    transform: "translateY(-50%)",
-    pointerEvents: "none",
-    borderLeft: "5px solid transparent",
-    borderRight: "5px solid transparent",
-    borderTop: `5px solid ${theme.text}`
-  } as CSSProperties;
-
   return (
     <div
       style={{
@@ -166,7 +122,18 @@ function DropDown(props: {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={selectStyle}
+        style={{
+          width: "100%",
+          padding: "0.5rem",
+          marginBottom: "0.5rem",
+          backgroundColor: theme.cardBackground,
+          color: theme.text,
+          border: `1px solid ${theme.border}`,
+          borderRadius: "4px",
+          appearance: "none",
+          WebkitAppearance: "none",
+          MozAppearance: "none"
+        }}
       >
         <option value="">Select {label}</option>
         {optionArr.map((option) => (
