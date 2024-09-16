@@ -1,1 +1,1 @@
-live - https://rickandmorty-refrens.netlify.app/
+demo - https://rickandmorty-refrens.netlify.app/
