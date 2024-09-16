@@ -1,36 +1,37 @@
-import React from "react";
+import React from 'react';
 
 interface IHamburgerMenuProps
 {
-  isOpen: boolean;
+  isOpen?: boolean;
   onToggle: () => void;
   isDarkMode: boolean;
 }
 
-export default function HamburgerMenu({
-  isOpen,
-  onToggle,
-  isDarkMode
-}: IHamburgerMenuProps)
+export default function HamburgerMenu(props: IHamburgerMenuProps)
 {
-  const iconColor = isDarkMode ? "#fff" : "#000";
+  const {
+    onToggle,
+    isOpen,
+    isDarkMode,
+  } = props;
+
+  const iconColor = isDarkMode ? '#fff' : '#000';
 
   return (
     <button
       onClick={onToggle}
       style={{
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        padding: "0.5rem",
-        top: "0.5rem",
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '0.5rem',
+        top: '0.5rem',
         left: 0,
         right: 0,
-        zIndex: 1000,
+        zIndex: 900,
         ...(isOpen && {
-          position: "absolute",
-          width: "80%"
-        })
+          position: 'absolute',
+        }),
       }}
     >
       {isOpen ? (
@@ -40,7 +41,7 @@ export default function HamburgerMenu({
           viewBox="0 0 25 25"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          style={{float: "right"}}
+          style={{ float: 'right' }}
         >
           <path
             d="M18.75 6.25L6.25 18.75"

@@ -1,0 +1,31 @@
+@keyframes pulse
+{
+  0%
+  {
+    opacity: 0.6;
+  }
+  50%
+  {
+    opacity: 1;
+  }
+  100%
+  {
+    opacity: 0.6;
+  }
+}
+
+.skeleton-loader
+{
+  animation: pulse 1.5s infinite;
+  border-radius: 4px;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.hidden
+{
+  display: none;
+}

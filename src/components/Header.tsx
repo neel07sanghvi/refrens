@@ -1,7 +1,7 @@
-import React from "react";
-import HamburgerMenu from "./HamburgerMenu";
-import SearchBar from "./SearchBar";
-import ThemeToggle from "./ThemeToggle";
+import React from 'react';
+import HamburgerMenu from './HamburgerMenu';
+import SearchBar from './SearchBar';
+import ThemeToggle from './ThemeToggle';
 
 interface IHeaderProps
 {
@@ -9,7 +9,6 @@ interface IHeaderProps
   searchValue: string;
   onThemeToggle: () => void;
   isDarkMode: boolean;
-  isMenuOpen: boolean;
   isMobile: boolean;
   toggleMenu: () => void;
 }
@@ -21,26 +20,30 @@ export function Header(props: IHeaderProps)
     searchValue,
     onThemeToggle,
     isDarkMode,
-    isMenuOpen,
     isMobile,
-    toggleMenu
+    toggleMenu,
   } = props;
 
   return (
     <header
       style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "1rem",
-        backgroundColor: isDarkMode ? "#333" : "#f0f0f0",
-        color: isDarkMode ? "#fff" : "#000",
-        position: "relative"
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '1rem',
+        backgroundColor: isDarkMode ? '#333' : '#f0f0f0',
+        color: isDarkMode ? '#fff' : '#000',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        transition: 'background-color 0.3s ease-in-out',
+        height: '70px',
       }}
     >
       {isMobile && (
         <HamburgerMenu
-          isOpen={isMenuOpen}
           onToggle={toggleMenu}
           isDarkMode={isDarkMode}
         />
@@ -50,11 +53,11 @@ export function Header(props: IHeaderProps)
 
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
           flexGrow: 1,
-          justifyContent: "space-between",
-          paddingLeft: "2rem"
+          justifyContent: 'space-between',
+          paddingLeft: '2rem',
         }}
       >
         <SearchBar
