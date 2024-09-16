@@ -1,9 +1,9 @@
-import {useCallback} from "react";
-import {useReducer} from "react";
-import {fetchCharacters} from "../services/api";
-import {TypeCharactersAction} from "../types/indexPlus";
-import {ICharactersState} from "../types/indexPlus";
-import {random} from "../utils/constants";
+import { useCallback } from 'react';
+import { useReducer } from 'react';
+import { fetchCharacters } from '../services/api';
+import { TypeCharactersAction } from '../types/indexPlus';
+import { ICharactersState } from '../types/indexPlus';
+import { random } from '../utils/constants';
 
 const initialState: ICharactersState = {
   characters: {},
@@ -12,47 +12,47 @@ const initialState: ICharactersState = {
   loading: false,
   error: null,
   filters: {},
-  version: random()
+  version: random(),
 };
 
 const fnCharactersReducer = (state: ICharactersState, action: TypeCharactersAction): ICharactersState =>
 {
   switch(action.type)
   {
-    case "FETCH_CHARACTERS_REQUEST":
+    case 'FETCH_CHARACTERS_REQUEST':
       return {
         ...state,
         loading: true,
-        error: null
+        error: null,
       };
-    case "FETCH_CHARACTERS_SUCCESS":
+    case 'FETCH_CHARACTERS_SUCCESS':
       return {
         ...state,
         loading: false,
         characters: {
           ...state.characters,
-          [action.payload.page]: action.payload.characters
+          [action.payload.page]: action.payload.characters,
         },
-        totalPages: action.payload.totalPages
+        totalPages: action.payload.totalPages,
       };
-    case "FETCH_CHARACTERS_FAILURE":
+    case 'FETCH_CHARACTERS_FAILURE':
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
-    case "SET_FILTERS":
+    case 'SET_FILTERS':
       return {
         ...state,
-        filters: {...state.filters, ...action.payload},
+        filters: { ...state.filters, ...action.payload },
         currentPage: 1,
-        version: random()
+        version: random(),
       };
-    case "SET_PAGE":
+    case 'SET_PAGE':
       return {
         ...state,
         currentPage: action.payload,
-        version: random()
+        version: random(),
       };
     default:
       return state;
@@ -65,39 +65,39 @@ export const useCharacters = () =>
 
   const loadCharacters = useCallback(async() =>
   {
-    dispatch({type: "FETCH_CHARACTERS_REQUEST"});
+    dispatch({ type: 'FETCH_CHARACTERS_REQUEST' });
 
     try
     {
       const {
         results,
-        info
+        info,
       } = await fetchCharacters(state.currentPage, state.filters);
 
       dispatch({
-        type: "FETCH_CHARACTERS_SUCCESS",
+        type: 'FETCH_CHARACTERS_SUCCESS',
         payload: {
           characters: results,
           page: state.currentPage,
-          totalPages: info.pages
-        }
+          totalPages: info.pages,
+        },
       });
     }
     catch(error)
     {
-      console.error("Failed to fetch character data:", error);
+      console.error('Failed to fetch character data:', error);
       dispatch({
-        type: "FETCH_CHARACTERS_FAILURE",
-        payload: "Failed to fetch characters"
+        type: 'FETCH_CHARACTERS_FAILURE',
+        payload: 'No results found',
       });
     }
   }, [state.currentPage, state.filters]);
 
-  const setFilters = useCallback((filters: Partial<ICharactersState["filters"]>) =>
+  const setFilters = useCallback((filters: Partial<ICharactersState['filters']>) =>
   {
     dispatch({
-      type: "SET_FILTERS",
-      payload: filters
+      type: 'SET_FILTERS',
+      payload: filters,
     });
 
   }, []);
@@ -105,8 +105,8 @@ export const useCharacters = () =>
   const setPage = useCallback((page: number) =>
   {
     dispatch({
-      type: "SET_PAGE",
-      payload: page
+      type: 'SET_PAGE',
+      payload: page,
     });
   }, []);
 
@@ -114,6 +114,6 @@ export const useCharacters = () =>
     state,
     loadCharacters,
     setFilters,
-    setPage
+    setPage,
   };
 };
